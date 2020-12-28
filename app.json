@@ -1,0 +1,27 @@
+{
+	"name":"ChatBot",
+	"description":"A PHP made Telegram Bot Just To Talk To The Admin Without Pm..",
+	"keywords":[
+		"telegram",
+		"chatbot",
+		"SayNoToPm"
+	],
+	"repository":"https://github.com/AnonymousVip/SayNoToPmBot",
+	"env": {
+		"TOKEN":{
+         "description": "Your bot token. Get one from @BotFather duh",
+         "required": true,
+         "value": "Rey Ninnu Kootesta"
+		},
+		"OWNER_ID":{
+         "description": "Admin Id For Replying To Messages...Please Give Only One Id!!",
+         "required": true,
+         "value": ""
+		},
+		"HEROKU_APP_NAME":{
+         "description": "Enter The Heroky App Name.. Copy and Paste It From Above Dude!!",
+         "required": true,
+         "value": ""
+		}
+	}
+}
