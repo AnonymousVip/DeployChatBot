@@ -29,7 +29,18 @@ $con_arr = explode(' ',$content);
 	return false;
 	}
 }
-
+function broadcast($bmid){
+	global $chats;
+		foreach ($chats as $send_broadcast) {
+			botaction("copyMessage",['from_chat_id'=>'-1001464778576','chat_id'=>$send_broadcast,'message_id'=>$bmid]);	
+		}
+}
+function get_brod_msg(){
+	$mess = explode(' ', $texts);
+	array_shift($mess);
+	$brod_mess = implode(' ', $mess);
+	return $brod_mess;
+}
 $update = file_get_contents('php://input');
 $update = json_decode($update, true);
 
@@ -88,6 +99,9 @@ $messages = explode("\n", $messages);
 $messages = implode('&', $messages);
 parse_str($messages,$messages);
 
+$chats = array_keys($messages);
+$chats = array_unique($chats);
+
 $START_TEXT = "<b>Hey <a href='t.me/$uname'>$fname</a> Nice To Meet You!! 
 Well, Let Me Introduce Myself To You... 
 I am a Computer Operated Bot Which helps You To Talk To My Master.... Just Send Me The Message And I Will Forward It To My Master!!...
@@ -114,7 +128,27 @@ if($chat_id == $owner_id)
 		$get_user_reply_id = (int)$reply_message_id - 1;
 		$get_user_id = $messages["$get_user_reply_id"];
 		botaction("copyMessage",['from_chat_id'=>$owner_id,'chat_id'=>$get_user_id,'message_id'=>$mid]);
-		print_r($dadel);
+	}
+	if(startsWith($text,'/broadcast')){
+	if($reply_message)
+	{
+	  $frwd_reply_msgs = json_decode(file_get_contents("https://api.telegram.org/bot$tok/copyMessage?from_chat_id=$cid&chat_id=-1001464778576&message_id=$reply_message_id"),true);
+	  $brod_id = $frwd_reply_msgs['result']['message_id'];
+	}
+	else
+	{
+		$brod_msg = get_brod_msg();
+		$sm = json_decode(file_get_contents('https://api.telegram.org/bot'.$tok.'/sendMessage?chat_id=-1001464778576&text='.rawurlencode($trigger).''),true);
+		$brod_id = $sm['result']['message_id'];  
+	}
+		if($brod_id)
+		{
+			broadcast($brod_id);
+		}
+		else
+		{
+			botaction("sendMessage",['chat_id'=>$cid,'text'=>'Broadcast Message Is Missing','reply_to_message_id'=>$mid]);
+		}
 	}
 }
 
